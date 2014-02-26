@@ -3,13 +3,15 @@ CT_SUITES = leptus_router leptus_req leptus_http leptus_pt leptus_config
 
 .PHONY: all deps compile shell
 
+MAD_OR_REBAR = $(shell { command -v mad || command -v ./rebar; } 2>/dev/null)
+
 all: deps compile
 
 deps:
-	./rebar get-deps
+	@if command -v mad; then mad fetch-deps; else ./rebar get-deps; fi
 
 compile:
-	./rebar compile
+	$(MAD_OR_REBAR) compile
 
 shell: all
 	erl -pa ebin deps/*/ebin
